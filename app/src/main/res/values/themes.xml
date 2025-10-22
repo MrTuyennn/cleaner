@@ -2,4 +2,10 @@
 <resources>
 
     <style name="Theme.Inetkrclean" parent="android:Theme.Material.Light.NoActionBar" />
+    <!-- Theme Splash cho API < 31 -->
+    <style name="Theme.App.Splash" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@drawable/splash_screen</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
 </resources>

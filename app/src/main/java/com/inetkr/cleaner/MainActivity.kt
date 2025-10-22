@@ -14,6 +14,8 @@ import androidx.compose.ui.tooling.preview.Preview
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Set the main theme after splash screen
+        setTheme(R.style.Theme_Inetkrclean)
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
