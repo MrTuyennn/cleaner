@@ -9,7 +9,7 @@ lifecycleRuntimeKtx = "2.9.4"
 activityCompose = "1.11.0"
 composeBom = "2024.09.00"
 
-navigation = "2.9.4"
+navigation = "2.9.5"
 lifecycle_version = "2.9.4"
 hilt_version = "2.56.2"
 coroutines = "1.9.0"
