@@ -10,8 +10,13 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract  class AppConfigModule {
+abstract  class RepositoryModule {
     @Binds
     @Singleton
     abstract  fun bindUserRepository(impl: AppConfigRepositoryImpl): AppConfigRepository
+
+   //cho các repository tiếp theo
+   //@Binds
+   //@Singleton
+   //abstract  fun bindUserRepository(impl: AppConfigRepositoryImpl): AppConfigRepository
 }

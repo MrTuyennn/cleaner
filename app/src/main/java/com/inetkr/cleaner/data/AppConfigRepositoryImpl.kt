@@ -4,7 +4,7 @@ import android.app.ActivityManager
 import android.content.Context
 import android.os.Build
 import com.inetkr.cleaner.BuildConfig
-import com.inetkr.cleaner.di.qualifiers.IoDispatcher
+import com.inetkr.cleaner.di.qualifiers.DefaultDispatcher
 import com.inetkr.cleaner.domain.entity.AppConfig
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
@@ -18,7 +18,7 @@ import java.util.UUID
 import javax.inject.Inject
 
 class AppConfigRepositoryImpl @Inject constructor(
-    @IoDispatcher private val coroutineDispatcher: CoroutineDispatcher,
+    @DefaultDispatcher private val coroutineDispatcher: CoroutineDispatcher,
     @ApplicationContext private val context: Context
 ) : AppConfigRepository {
 
