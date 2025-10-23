@@ -1,4 +1,4 @@
-package com.inetkr.cleaner.data
+package com.inetkr.cleaner.data.repository.appconfig
 
 import com.inetkr.cleaner.domain.entity.AppConfig
 import kotlinx.coroutines.flow.StateFlow

@@ -1,6 +1,6 @@
 package com.inetkr.cleaner.domain.usecase
 
-import com.inetkr.cleaner.data.AppConfigRepository
+import com.inetkr.cleaner.data.repository.appconfig.AppConfigRepository
 import javax.inject.Inject
 
 class LoadAppConfigUseCase @Inject constructor(

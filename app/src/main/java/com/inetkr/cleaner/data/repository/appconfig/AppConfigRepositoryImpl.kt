@@ -1,4 +1,4 @@
-package com.inetkr.cleaner.data
+package com.inetkr.cleaner.data.repository.appconfig
 
 import android.app.ActivityManager
 import android.content.Context

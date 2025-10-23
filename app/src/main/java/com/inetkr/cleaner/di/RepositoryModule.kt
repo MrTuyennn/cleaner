@@ -1,7 +1,7 @@
 package com.inetkr.cleaner.di
 
-import com.inetkr.cleaner.data.AppConfigRepository
-import com.inetkr.cleaner.data.AppConfigRepositoryImpl
+import com.inetkr.cleaner.data.repository.appconfig.AppConfigRepository
+import com.inetkr.cleaner.data.repository.appconfig.AppConfigRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
