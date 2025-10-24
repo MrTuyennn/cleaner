@@ -7,6 +7,7 @@ enum class MediaType {
 }
 
 data class MediaFile(
+    val id: Long,
     val uri: Uri,
     val name: String,
     val duration: Int? = null,

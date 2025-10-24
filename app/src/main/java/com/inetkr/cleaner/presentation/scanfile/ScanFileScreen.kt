@@ -72,11 +72,15 @@ fun ScanFileScreen(
                 }
 
                 items((scanState as ScanFileState.Success).images) { image ->
-                    ImageItem(image)
+                    ImageItem(image){
+                        viewModel.deleteItemFile(image)
+                    }
                 }
 
                 items((scanState as ScanFileState.Success).videos) { video ->
-                    VideoItem(video)
+                    VideoItem(video) {
+                        viewModel.deleteItemFile(video)
+                    }
                 }
             }
         }
@@ -109,8 +113,9 @@ fun ScanFileScreen(
 
 
 @Composable
-fun ImageItem(image: MediaFile) {
+fun ImageItem(image: MediaFile,onClick: () -> Unit) {
     Card(
+        onClick = onClick,
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
@@ -140,8 +145,9 @@ fun ImageItem(image: MediaFile) {
 }
 
 @Composable
-fun VideoItem(video: MediaFile) {
+fun VideoItem(video: MediaFile,onClick: () -> Unit) {
     Card(
+        onClick = onClick,
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)

@@ -2,6 +2,8 @@ package com.inetkr.cleaner.presentation.scanfile
 
 import androidx.lifecycle.viewModelScope
 import arrow.core.Either
+import com.inetkr.cleaner.domain.entity.MediaFile
+import com.inetkr.cleaner.domain.usecase.DeleteFileItemUseCase
 import com.inetkr.cleaner.domain.usecase.ScanFileImageUseCase
 import com.inetkr.cleaner.domain.usecase.ScanFileVideoUseCase
 import com.inetkr.cleaner.utils.appcomponent.BaseViewModel
@@ -15,6 +17,7 @@ import javax.inject.Inject
 class ScanFileViewModel @Inject constructor(
     private val scanFileVideoUseCase: ScanFileVideoUseCase,
     private val scanFileImageUseCase: ScanFileImageUseCase,
+    private val deleteFileItemUseCase: DeleteFileItemUseCase
 ): BaseViewModel() {
 
     private val _scanState = MutableStateFlow<ScanFileState>(ScanFileState.Idle)
@@ -45,6 +48,33 @@ class ScanFileViewModel @Inject constructor(
                     )
                 }
             }
+        }
+    }
+
+    fun deleteItemFile(mediaFile: MediaFile) {
+        viewModelScope.launch {
+          val result = deleteFileItemUseCase.invoke(mediaFile)
+            result.fold(
+                ifLeft = { error ->
+                    _scanState.value = ScanFileState.Error("Delete failed: ${error.message}")
+                },
+                ifRight = { success ->
+                    removeItemFromState(mediaFile)
+                },
+            )
+        }
+    }
+
+    private fun removeItemFromState(mediaFile: MediaFile) {
+        val currentState = _scanState.value
+        if (currentState is ScanFileState.Success) {
+            val updatedImages = currentState.images.filter { it.uri != mediaFile.uri }
+            val updatedVideos = currentState.videos.filter { it.uri != mediaFile.uri }
+
+            _scanState.value = ScanFileState.Success(
+                images = updatedImages,
+                videos = updatedVideos
+            )
         }
     }
 }

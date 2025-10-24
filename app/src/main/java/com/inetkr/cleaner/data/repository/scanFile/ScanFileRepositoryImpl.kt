@@ -1,5 +1,6 @@
 package com.inetkr.cleaner.data.repository.scanFile
 
+import arrow.core.Either
 import com.inetkr.cleaner.data.local.scanFile.DataSourceScanFile
 import com.inetkr.cleaner.di.qualifiers.DefaultDispatcher
 import com.inetkr.cleaner.domain.entity.MediaFile
@@ -18,5 +19,9 @@ class ScanFileRepositoryImpl @Inject constructor(
     override suspend fun scanImageFile(): List<MediaFile> = withContext(coroutineDispatcher) {
         val allImage = dataSourceScanFile.scanAllImages()
         return@withContext allImage
+    }
+
+    override suspend fun deleteFileItem(mediaFile: MediaFile): Either<Throwable, Boolean> = withContext(coroutineDispatcher) {
+        dataSourceScanFile.deleteItem(mediaFile)
     }
 }

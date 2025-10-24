@@ -5,6 +5,7 @@ import android.content.Context
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
+import arrow.core.Either
 import com.inetkr.cleaner.domain.entity.MediaFile
 import com.inetkr.cleaner.domain.entity.MediaType
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -49,6 +50,7 @@ class DataSourceScanFile @Inject constructor(
                 val size = cursor.getInt(sizeColumn)
 
                 val mediaFile = MediaFile(
+                    id = id,
                     uri = Uri.withAppendedPath(collection, id.toString()),
                     name = name,
                     duration = duration,
@@ -97,6 +99,7 @@ class DataSourceScanFile @Inject constructor(
                 val size = cursor.getInt(sizeColumn)
 
                 val mediaFile = MediaFile(
+                    id = id,
                     uri = Uri.withAppendedPath(collection, id.toString()),
                     name = name,
                     duration = null,
@@ -109,7 +112,34 @@ class DataSourceScanFile @Inject constructor(
                 println("Image: $name, Size: $size bytes, thumbnailUri: ${mediaFile.thumbnailUri}")
             }
         }
-
         return mediaList
+    }
+
+    suspend fun deleteItem(mediaFile: MediaFile): Either<Throwable, Boolean> {
+         return try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                val collection = if (mediaFile.type == MediaType.IMAGE) {
+                    MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL)
+                } else {
+                    MediaStore.Video.Media.getContentUri(MediaStore.VOLUME_EXTERNAL)
+                }
+
+                val result = context.contentResolver.delete(
+                    collection,
+                    "${MediaStore.MediaColumns._ID} = ?",
+                    arrayOf(mediaFile.uri.lastPathSegment ?: "")
+                )
+               Either.Right(result > 0)
+            } else {
+                val result = context.contentResolver.delete(
+                    mediaFile.uri,
+                    null,
+                    null
+                )
+                Either.Right(result > 0)
+            }
+        } catch (e: Exception) {
+             Either.Left(e)
+        }
     }
 }

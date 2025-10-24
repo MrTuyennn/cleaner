@@ -30,3 +30,11 @@ class ScanFileImageUseCase @Inject constructor(
         }
     }
 }
+
+class DeleteFileItemUseCase @Inject constructor(
+    private val scanFileRepository: ScanFileRepository
+) {
+    suspend operator fun invoke(mediaFile: MediaFile): Either<Throwable, Boolean> {
+        return scanFileRepository.deleteFileItem(mediaFile)
+    }
+}
