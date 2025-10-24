@@ -157,6 +157,9 @@ dependencies {
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.datastore.core)
 
+    // ================== Arrow-core ==================
+    implementation(libs.arrow.core)
+
     // ================== AppCompat (chỉ giữ nếu còn View/XML) ==================
     implementation(libs.androidx.appcompat)
 }

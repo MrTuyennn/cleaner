@@ -11,6 +11,8 @@ import com.inetkr.cleaner.utils.router.HomeRoute
 import com.inetkr.cleaner.utils.router.SplashRoute
 import androidx.navigation.compose.composable
 import com.inetkr.cleaner.presentation.home.HomeScreen
+import com.inetkr.cleaner.presentation.scanfile.ScanFileScreen
+import com.inetkr.cleaner.utils.router.ScanFileRoute
 
 
 @Composable
@@ -30,7 +32,10 @@ fun RootNav() {
             SplashScreen(nav)
         }
         composable<HomeRoute> {
-            HomeScreen()
+            HomeScreen(nav)
+        }
+        composable<ScanFileRoute> {
+            ScanFileScreen(nav)
         }
     }
 }

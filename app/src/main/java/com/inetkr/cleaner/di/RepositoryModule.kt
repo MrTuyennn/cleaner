@@ -2,6 +2,8 @@ package com.inetkr.cleaner.di
 
 import com.inetkr.cleaner.data.repository.appconfig.AppConfigRepository
 import com.inetkr.cleaner.data.repository.appconfig.AppConfigRepositoryImpl
+import com.inetkr.cleaner.data.repository.scanFile.ScanFileRepository
+import com.inetkr.cleaner.data.repository.scanFile.ScanFileRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -13,10 +15,9 @@ import javax.inject.Singleton
 abstract  class RepositoryModule {
     @Binds
     @Singleton
-    abstract  fun bindUserRepository(impl: AppConfigRepositoryImpl): AppConfigRepository
+    abstract  fun bindAppConfigRepository(impl: AppConfigRepositoryImpl): AppConfigRepository
 
-   //cho các repository tiếp theo
-   //@Binds
-   //@Singleton
-   //abstract  fun bindUserRepository(impl: AppConfigRepositoryImpl): AppConfigRepository
+   @Binds
+   @Singleton
+   abstract  fun bindScanFileRepository(impl: ScanFileRepositoryImpl): ScanFileRepository
 }
