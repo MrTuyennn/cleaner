@@ -38,3 +38,9 @@ class DeleteFileItemUseCase @Inject constructor(
         return scanFileRepository.deleteFileItem(mediaFile)
     }
 }
+
+class GetAllFolderUseCase @Inject constructor(
+    private val scanFileRepository: ScanFileRepository
+) {
+    suspend operator fun invoke() = scanFileRepository.getAllFolder()
+}

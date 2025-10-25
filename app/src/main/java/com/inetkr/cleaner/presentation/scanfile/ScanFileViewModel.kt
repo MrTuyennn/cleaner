@@ -4,12 +4,17 @@ import androidx.lifecycle.viewModelScope
 import arrow.core.Either
 import com.inetkr.cleaner.domain.entity.MediaFile
 import com.inetkr.cleaner.domain.usecase.DeleteFileItemUseCase
+import com.inetkr.cleaner.domain.usecase.GetAllFolderUseCase
 import com.inetkr.cleaner.domain.usecase.ScanFileImageUseCase
 import com.inetkr.cleaner.domain.usecase.ScanFileVideoUseCase
 import com.inetkr.cleaner.utils.appcomponent.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,11 +22,24 @@ import javax.inject.Inject
 class ScanFileViewModel @Inject constructor(
     private val scanFileVideoUseCase: ScanFileVideoUseCase,
     private val scanFileImageUseCase: ScanFileImageUseCase,
-    private val deleteFileItemUseCase: DeleteFileItemUseCase
+    private val deleteFileItemUseCase: DeleteFileItemUseCase,
+    private val getAllFolderUseCase: GetAllFolderUseCase
 ): BaseViewModel() {
 
     private val _scanState = MutableStateFlow<ScanFileState>(ScanFileState.Idle)
     val scanState = _scanState.asStateFlow()
+
+    val lsImage: StateFlow<List<MediaFile>> get() = _scanState.map { state ->
+        if (state is ScanFileState.Success) {
+            state.images
+        } else {
+            emptyList()
+        }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = emptyList()
+    )
 
     init {
         scanFiles()
@@ -33,6 +51,8 @@ class ScanFileViewModel @Inject constructor(
 
             val imageResult = scanFileImageUseCase.invoke()
             val videoResult = scanFileVideoUseCase.invoke()
+            getAllFolderUseCase.invoke()
+
 
             when {
                 imageResult is Either.Left && videoResult is Either.Left -> {

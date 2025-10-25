@@ -8,4 +8,6 @@ interface ScanFileRepository {
     suspend fun scanImageFile(): List<MediaFile>
 
     suspend fun deleteFileItem(mediaFile: MediaFile): Either<Throwable, Boolean>
+
+    suspend fun getAllFolder()
 }

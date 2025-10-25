@@ -24,4 +24,8 @@ class ScanFileRepositoryImpl @Inject constructor(
     override suspend fun deleteFileItem(mediaFile: MediaFile): Either<Throwable, Boolean> = withContext(coroutineDispatcher) {
         dataSourceScanFile.deleteItem(mediaFile)
     }
+
+    override suspend fun getAllFolder() {
+        dataSourceScanFile.getAllFolder()
+    }
 }

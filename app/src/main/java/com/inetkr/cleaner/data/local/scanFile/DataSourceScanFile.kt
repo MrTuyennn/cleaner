@@ -5,7 +5,9 @@ import android.content.Context
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
+import androidx.annotation.RequiresApi
 import arrow.core.Either
+import com.inetkr.cleaner.domain.entity.Folder
 import com.inetkr.cleaner.domain.entity.MediaFile
 import com.inetkr.cleaner.domain.entity.MediaType
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -15,7 +17,7 @@ import javax.inject.Inject
 class DataSourceScanFile @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
-  suspend  fun scanAllVideos(): List<MediaFile> {
+    suspend fun scanAllVideos(): List<MediaFile> {
         val mediaList = mutableListOf<MediaFile>()
         val collection = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             MediaStore.Video.Media.getContentUri(MediaStore.VOLUME_EXTERNAL)
@@ -66,7 +68,7 @@ class DataSourceScanFile @Inject constructor(
         return mediaList
     }
 
-  suspend  fun scanAllImages(): List<MediaFile> {
+    suspend fun scanAllImages(): List<MediaFile> {
         val mediaList = mutableListOf<MediaFile>()
         val collection = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL)
@@ -116,7 +118,7 @@ class DataSourceScanFile @Inject constructor(
     }
 
     suspend fun deleteItem(mediaFile: MediaFile): Either<Throwable, Boolean> {
-         return try {
+        return try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 val collection = if (mediaFile.type == MediaType.IMAGE) {
                     MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL)
@@ -129,7 +131,7 @@ class DataSourceScanFile @Inject constructor(
                     "${MediaStore.MediaColumns._ID} = ?",
                     arrayOf(mediaFile.uri.lastPathSegment ?: "")
                 )
-               Either.Right(result > 0)
+                Either.Right(result > 0)
             } else {
                 val result = context.contentResolver.delete(
                     mediaFile.uri,
@@ -139,7 +141,30 @@ class DataSourceScanFile @Inject constructor(
                 Either.Right(result > 0)
             }
         } catch (e: Exception) {
-             Either.Left(e)
+            Either.Left(e)
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.Q)
+    suspend fun getAllFolder() {
+        val imageUris = mutableListOf<Uri>()
+        val collection = MediaStore.Images.Media.getContentUri(
+            MediaStore.VOLUME_EXTERNAL_PRIMARY
+        )
+        val projection = arrayOf(MediaStore.Images.Media._ID)
+        context.contentResolver.query(
+            collection,
+            projection,
+            null,
+            null,
+            null
+        )?.use { cursor ->
+            while (cursor.moveToNext()) {
+                val id = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID))
+                val contentUri = Uri.withAppendedPath(collection, id.toString())
+                imageUris.add(contentUri)
+            }
+        }
+        println(imageUris)
     }
 }
