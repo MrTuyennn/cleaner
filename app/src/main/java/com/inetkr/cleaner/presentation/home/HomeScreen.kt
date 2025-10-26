@@ -25,6 +25,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.inetkr.cleaner.utils.Utilities
 import com.inetkr.cleaner.utils.perm.RequestMediaPermission
+import com.inetkr.cleaner.utils.router.AppUsageRoute
 import com.inetkr.cleaner.utils.router.ScanFileRoute
 
 @Composable
@@ -83,6 +84,14 @@ fun HomeScreen(
                 }
             ) {
                 Text("Go to Scan File")
+            }
+
+            Button(
+                onClick = {
+                    nav.navigate(AppUsageRoute)
+                }
+            ) {
+                Text("Go to App Usage")
             }
         }
     }

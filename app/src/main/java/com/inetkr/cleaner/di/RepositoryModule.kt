@@ -2,6 +2,8 @@ package com.inetkr.cleaner.di
 
 import com.inetkr.cleaner.data.repository.appconfig.AppConfigRepository
 import com.inetkr.cleaner.data.repository.appconfig.AppConfigRepositoryImpl
+import com.inetkr.cleaner.data.repository.appusage.AppUsageRepository
+import com.inetkr.cleaner.data.repository.appusage.AppUsageRepositoryImpl
 import com.inetkr.cleaner.data.repository.scanFile.ScanFileRepository
 import com.inetkr.cleaner.data.repository.scanFile.ScanFileRepositoryImpl
 import dagger.Binds
@@ -20,4 +22,8 @@ abstract  class RepositoryModule {
    @Binds
    @Singleton
    abstract  fun bindScanFileRepository(impl: ScanFileRepositoryImpl): ScanFileRepository
+
+   @Binds
+   @Singleton
+   abstract fun bindAppUsageRepository(impl: AppUsageRepositoryImpl): AppUsageRepository
 }

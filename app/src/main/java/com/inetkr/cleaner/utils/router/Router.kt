@@ -6,3 +6,5 @@ import kotlinx.serialization.Serializable
 @Serializable object HomeRoute
 
 @Serializable object ScanFileRoute
+
+@Serializable object AppUsageRoute
