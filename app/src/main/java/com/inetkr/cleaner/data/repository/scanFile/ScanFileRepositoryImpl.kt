@@ -3,6 +3,7 @@ package com.inetkr.cleaner.data.repository.scanFile
 import arrow.core.Either
 import com.inetkr.cleaner.data.local.scanFile.DataSourceScanFile
 import com.inetkr.cleaner.di.qualifiers.DefaultDispatcher
+import com.inetkr.cleaner.domain.entity.Folder
 import com.inetkr.cleaner.domain.entity.MediaFile
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
@@ -25,7 +26,7 @@ class ScanFileRepositoryImpl @Inject constructor(
         dataSourceScanFile.deleteItem(mediaFile)
     }
 
-    override suspend fun getAllFolder() {
-        dataSourceScanFile.getAllFolder()
+    override suspend fun getAllFolder(): Either<Throwable, List<Folder>> = withContext(coroutineDispatcher) {
+        return@withContext dataSourceScanFile.getAllFolders()
     }
 }

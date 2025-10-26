@@ -1,6 +1,7 @@
 package com.inetkr.cleaner.data.repository.scanFile
 
 import arrow.core.Either
+import com.inetkr.cleaner.domain.entity.Folder
 import com.inetkr.cleaner.domain.entity.MediaFile
 
 interface ScanFileRepository {
@@ -9,5 +10,5 @@ interface ScanFileRepository {
 
     suspend fun deleteFileItem(mediaFile: MediaFile): Either<Throwable, Boolean>
 
-    suspend fun getAllFolder()
+    suspend fun getAllFolder(): Either<Throwable, List<Folder>>
 }

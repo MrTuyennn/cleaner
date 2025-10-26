@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -27,6 +29,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.inetkr.cleaner.domain.entity.MediaFile
+import coil3.compose.AsyncImage
+
 
 @Composable
 fun ScanFileScreen(
@@ -63,23 +67,31 @@ fun ScanFileScreen(
 
         is ScanFileState.Success -> {
             // Success state
-            LazyColumn {
-                item {
-                    Text(
-                        "Found ${(scanState as ScanFileState.Success).images.size} images and ${(scanState as ScanFileState.Success).videos.size} videos",
-                        style = MaterialTheme.typography.headlineSmall
-                    )
-                }
+            Column {
+                Box(modifier = Modifier.fillMaxWidth().statusBarsPadding())
 
-                items((scanState as ScanFileState.Success).images) { image ->
-                    ImageItem(image){
-                        viewModel.deleteItemFile(image)
+                LazyColumn {
+                    item {
+                        Text(
+                            "Found ${(scanState as ScanFileState.Success).images.size} images and ${(scanState as ScanFileState.Success).videos.size} videos",
+                            style = MaterialTheme.typography.headlineSmall
+                        )
                     }
-                }
 
-                items((scanState as ScanFileState.Success).videos) { video ->
-                    VideoItem(video) {
-                        viewModel.deleteItemFile(video)
+                    items((scanState as ScanFileState.Success).folders) { folder ->
+                        Text(folder.name)
+                    }
+
+                    items((scanState as ScanFileState.Success).images) { image ->
+                        ImageItem(image){
+                            viewModel.deleteItemFile(image)
+                        }
+                    }
+
+                    items((scanState as ScanFileState.Success).videos) { video ->
+                        VideoItem(video) {
+                            viewModel.deleteItemFile(video)
+                        }
                     }
                 }
             }
@@ -124,13 +136,21 @@ fun ImageItem(image: MediaFile,onClick: () -> Unit) {
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-//            AsyncImage(
-//                model = image.thumbnailUri,
-//                contentDescription = image.name,
-//                modifier = Modifier.size(64.dp)
-//            )
+            AsyncImage(
+                model = image.thumbnailUri,
+                contentDescription = image.name,
+                modifier = Modifier.size(64.dp)
+            )
             Spacer(modifier = Modifier.width(16.dp))
             Column {
+                Text(
+                    text = image.uri.toString(),
+                    style = MaterialTheme.typography.titleMedium
+                )
+                Text(
+                    text = image.thumbnailUri,
+                    style = MaterialTheme.typography.titleMedium
+                )
                 Text(
                     text = image.name,
                     style = MaterialTheme.typography.titleMedium

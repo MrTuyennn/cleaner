@@ -5,7 +5,6 @@ import android.content.Context
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
-import androidx.annotation.RequiresApi
 import arrow.core.Either
 import com.inetkr.cleaner.domain.entity.Folder
 import com.inetkr.cleaner.domain.entity.MediaFile
@@ -111,13 +110,14 @@ class DataSourceScanFile @Inject constructor(
                 )
 
                 mediaList.add(mediaFile)
-                println("Image: $name, Size: $size bytes, thumbnailUri: ${mediaFile.thumbnailUri}")
+            //    println("Image: $name, Size: $size bytes, thumbnailUri: ${mediaFile.thumbnailUri}")
             }
         }
         return mediaList
     }
 
     suspend fun deleteItem(mediaFile: MediaFile): Either<Throwable, Boolean> {
+        print("folderSet ==== 333333")
         return try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 val collection = if (mediaFile.type == MediaType.IMAGE) {
@@ -145,26 +145,68 @@ class DataSourceScanFile @Inject constructor(
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.Q)
-    suspend fun getAllFolder() {
-        val imageUris = mutableListOf<Uri>()
-        val collection = MediaStore.Images.Media.getContentUri(
-            MediaStore.VOLUME_EXTERNAL_PRIMARY
+    suspend fun getAllFolders(): Either<Throwable, List<Folder>> {
+        val folderSet = mutableSetOf<String>()
+
+        // Lấy thư mục từ images
+        val imageCollection = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+        
+        val imageProjection = arrayOf(
+            MediaStore.Images.Media.BUCKET_DISPLAY_NAME
         )
-        val projection = arrayOf(MediaStore.Images.Media._ID)
-        context.contentResolver.query(
-            collection,
-            projection,
+        
+        val imageQuery = context.contentResolver.query(
+            imageCollection,
+            imageProjection,
             null,
             null,
-            null
-        )?.use { cursor ->
+            MediaStore.Images.Media.BUCKET_DISPLAY_NAME
+        )
+        
+        imageQuery?.use { cursor ->
+            val bucketNameColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME)
+            
             while (cursor.moveToNext()) {
-                val id = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID))
-                val contentUri = Uri.withAppendedPath(collection, id.toString())
-                imageUris.add(contentUri)
+                val folderName = cursor.getString(bucketNameColumn)
+                if (!folderName.isNullOrEmpty()) {
+                    folderSet.add(folderName)
+                }
             }
         }
-        println(imageUris)
+        
+        // Lấy thư mục từ videos
+        val videoCollection = MediaStore.Video.Media.EXTERNAL_CONTENT_URI
+        
+        val videoProjection = arrayOf(
+            MediaStore.Video.Media.BUCKET_DISPLAY_NAME
+        )
+        
+        val videoQuery = context.contentResolver.query(
+            videoCollection,
+            videoProjection,
+            null,
+            null,
+            MediaStore.Video.Media.BUCKET_DISPLAY_NAME
+        )
+        
+        videoQuery?.use { cursor ->
+            val bucketNameColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.BUCKET_DISPLAY_NAME)
+            
+            while (cursor.moveToNext()) {
+                val folderName = cursor.getString(bucketNameColumn)
+                if (!folderName.isNullOrEmpty()) {
+                    folderSet.add(folderName)
+                }
+            }
+        }
+
+        println("folderSet ==== $folderSet")
+
+        return Either.Right(folderSet.map { folderName ->
+            Folder(
+                name = folderName,
+                path = "bucket_$folderName"
+            )
+        }.sortedBy { it.name })
     }
 }

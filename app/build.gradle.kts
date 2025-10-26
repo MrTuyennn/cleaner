@@ -156,6 +156,11 @@ dependencies {
     // ================== AppCompat (chỉ giữ nếu còn View/XML) ==================
     implementation(libs.androidx.appcompat)
 
+    // ================== coil ==================
+    implementation(libs.coil3.compose)
+
+
+
     // ================== Unit Testing ==================
     testImplementation(libs.mockk)
     testImplementation(libs.mockito.core)

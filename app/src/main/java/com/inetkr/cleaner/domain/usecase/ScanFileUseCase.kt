@@ -2,6 +2,7 @@ package com.inetkr.cleaner.domain.usecase
 
 import arrow.core.Either
 import com.inetkr.cleaner.data.repository.scanFile.ScanFileRepository
+import com.inetkr.cleaner.domain.entity.Folder
 import com.inetkr.cleaner.domain.entity.MediaFile
 import javax.inject.Inject
 
@@ -42,5 +43,7 @@ class DeleteFileItemUseCase @Inject constructor(
 class GetAllFolderUseCase @Inject constructor(
     private val scanFileRepository: ScanFileRepository
 ) {
-    suspend operator fun invoke() = scanFileRepository.getAllFolder()
+    suspend operator fun invoke(): Either<Throwable, List<Folder>> {
+      return scanFileRepository.getAllFolder()
+    }
 }

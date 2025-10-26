@@ -27,6 +27,7 @@ class ScanFileViewModel @Inject constructor(
 ): BaseViewModel() {
 
     private val _scanState = MutableStateFlow<ScanFileState>(ScanFileState.Idle)
+
     val scanState = _scanState.asStateFlow()
 
     val lsImage: StateFlow<List<MediaFile>> get() = _scanState.map { state ->
@@ -51,7 +52,7 @@ class ScanFileViewModel @Inject constructor(
 
             val imageResult = scanFileImageUseCase.invoke()
             val videoResult = scanFileVideoUseCase.invoke()
-            getAllFolderUseCase.invoke()
+            val folderResult = getAllFolderUseCase.invoke()
 
 
             when {
@@ -61,10 +62,13 @@ class ScanFileViewModel @Inject constructor(
                 else -> {
                     val images = (imageResult as? Either.Right)?.value ?: emptyList()
                     val videos = (videoResult as? Either.Right)?.value ?: emptyList()
+                    val folders = (folderResult as? Either.Right)?.value ?: emptyList()
+
 
                     _scanState.value = ScanFileState.Success(
                         images = images,
-                        videos = videos
+                        videos = videos,
+                        folders = folders
                     )
                 }
             }
@@ -93,7 +97,8 @@ class ScanFileViewModel @Inject constructor(
 
             _scanState.value = ScanFileState.Success(
                 images = updatedImages,
-                videos = updatedVideos
+                videos = updatedVideos,
+                folders = currentState.folders
             )
         }
     }
