@@ -3,6 +3,7 @@ package com.inetkr.cleaner.presentation.appusage
 import androidx.lifecycle.viewModelScope
 import arrow.core.Either
 import com.inetkr.cleaner.domain.entity.AppUsageInfo
+import com.inetkr.cleaner.domain.usecase.CleanCacheAppUseCase
 import com.inetkr.cleaner.domain.usecase.GetAppUsageUseCase
 import com.inetkr.cleaner.domain.usecase.UnInstallAppUseCase
 import com.inetkr.cleaner.utils.appcomponent.BaseViewModel
@@ -15,7 +16,8 @@ import javax.inject.Inject
 @HiltViewModel
 class AppUsageViewModel @Inject constructor(
     private val appUsageUseCase: GetAppUsageUseCase,
-    private val unInstallAppUseCase: UnInstallAppUseCase
+    private val unInstallAppUseCase: UnInstallAppUseCase,
+    private val cleanCacheAppUseCase: CleanCacheAppUseCase
 ): BaseViewModel() {
 
     val _appInfo = MutableStateFlow<AppUsageState>(AppUsageState.Idle)
@@ -60,6 +62,12 @@ class AppUsageViewModel @Inject constructor(
         if (currentState is AppUsageState.Success) {
             val updatedAppUsage = currentState.appUsage.filter { it.packageName != packageName }
             _appInfo.value = AppUsageState.Success(updatedAppUsage)
+        }
+    }
+
+    fun cleanCacheAppUsage(appUsage: AppUsageInfo) {
+        viewModelScope.launch {
+            cleanCacheAppUseCase.invoke(appUsage)
         }
     }
 

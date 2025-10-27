@@ -97,7 +97,8 @@ fun AppUsageScreen(
                     items((appUsage as AppUsageState.Success).appUsage) { app ->
                         Card(
                             onClick = {
-                                appUsageViewModel.unInstallAppUsage(app)
+                                //appUsageViewModel.unInstallAppUsage(app)
+                                appUsageViewModel.cleanCacheAppUsage(app)
                             }
                         ) {
                             Row() {

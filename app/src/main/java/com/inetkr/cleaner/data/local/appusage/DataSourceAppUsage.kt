@@ -6,6 +6,7 @@ import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
+import android.provider.Settings
 import androidx.annotation.RequiresApi
 import arrow.core.Either
 import com.inetkr.cleaner.domain.entity.AppUsageInfo
@@ -61,6 +62,58 @@ class DataSourceAppUsage @Inject constructor(
             Either.Right(true)
         } catch (e: Exception) {
             Either.Left(e)
+        }
+    }
+
+    suspend fun cleanCacheApp(appUsage: AppUsageInfo) {
+        try {
+            val hasPermission = checkWriteSecureSettingsPermission()
+            if(hasPermission) {
+                tryCleanCacheDirectly(appUsage.packageName)
+            } else {
+                openAppSettings(appUsage.packageName)
+            }
+        } catch (e: Exception) {
+            println("Exception : $e")
+        }
+    }
+
+    private fun checkWriteSecureSettingsPermission(): Boolean {
+        return try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                Settings.System.canWrite(context)
+            } else {
+                true
+            }
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    private suspend fun tryCleanCacheDirectly(packageName: String) {
+        try {
+            val process = Runtime.getRuntime().exec("pm clear --cache-only $packageName")
+            val result = process.waitFor()
+
+            if (result == 0) {
+                println("Cache cleared successfully for package: $packageName")
+
+            } else {
+                println("Cannot clear cache (code: $result)")
+            }
+        } catch (e: Exception) {
+            println("Cannot clear cache Exception : $e")
+        }
+    }
+
+    private suspend fun openAppSettings(packageName: String) {
+         try {
+            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                data = Uri.parse("package:$packageName")
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+            context.startActivity(intent)
+        } catch (e: Exception) {
         }
     }
 }

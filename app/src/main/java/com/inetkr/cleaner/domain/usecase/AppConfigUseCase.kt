@@ -14,3 +14,4 @@ class GetAppConfigUseCase @Inject constructor(
 ) {
     operator fun invoke() = appConfigRepository.appConfigInfo
 }
+

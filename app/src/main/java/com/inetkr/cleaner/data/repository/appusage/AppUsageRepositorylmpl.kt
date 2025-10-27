@@ -24,4 +24,8 @@ class AppUsageRepositoryImpl @Inject constructor(
         withContext(coroutineDispatcher) {
             return@withContext dataSourceAppUsage.uninstallApp(appUsage)
         }
+
+    override suspend fun cleanCacheApp(appUsage: AppUsageInfo) = with(coroutineDispatcher) {
+        dataSourceAppUsage.cleanCacheApp(appUsage)
+    }
 }

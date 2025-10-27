@@ -16,3 +16,9 @@ class UnInstallAppUseCase @Inject constructor(
 ) {
     suspend operator fun  invoke(appUsage: AppUsageInfo): Either<Throwable, Boolean> = appUsageRepository.unInstallApp(appUsage)
 }
+
+class CleanCacheAppUseCase @Inject constructor(
+    private val appUsageRepository: AppUsageRepository
+) {
+    suspend operator fun invoke(appUsage: AppUsageInfo) = appUsageRepository.cleanCacheApp(appUsage)
+}
