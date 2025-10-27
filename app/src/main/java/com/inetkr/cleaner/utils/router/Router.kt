@@ -8,3 +8,5 @@ import kotlinx.serialization.Serializable
 @Serializable object ScanFileRoute
 
 @Serializable object AppUsageRoute
+
+@Serializable object MemoryRoute

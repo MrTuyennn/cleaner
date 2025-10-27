@@ -11,8 +11,10 @@ import com.inetkr.cleaner.utils.router.SplashRoute
 import androidx.navigation.compose.composable
 import com.inetkr.cleaner.presentation.appusage.AppUsageScreen
 import com.inetkr.cleaner.presentation.home.HomeScreen
+import com.inetkr.cleaner.presentation.memory.MemoryManagerScreen
 import com.inetkr.cleaner.presentation.scanfile.ScanFileScreen
 import com.inetkr.cleaner.utils.router.AppUsageRoute
+import com.inetkr.cleaner.utils.router.MemoryRoute
 import com.inetkr.cleaner.utils.router.ScanFileRoute
 
 
@@ -40,6 +42,9 @@ fun RootNav() {
         }
         composable<AppUsageRoute> {
             AppUsageScreen(nav)
+        }
+        composable<MemoryRoute> {
+            MemoryManagerScreen(nav)
         }
     }
 }

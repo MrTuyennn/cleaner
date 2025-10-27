@@ -26,6 +26,7 @@ import androidx.navigation.NavController
 import com.inetkr.cleaner.utils.Utilities
 import com.inetkr.cleaner.utils.perm.RequestMediaPermission
 import com.inetkr.cleaner.utils.router.AppUsageRoute
+import com.inetkr.cleaner.utils.router.MemoryRoute
 import com.inetkr.cleaner.utils.router.ScanFileRoute
 
 @Composable
@@ -92,6 +93,14 @@ fun HomeScreen(
                 }
             ) {
                 Text("Go to App Usage")
+            }
+
+            Button(
+                onClick = {
+                    nav.navigate(MemoryRoute)
+                }
+            ) {
+                Text("Go to App Memory")
             }
         }
     }
