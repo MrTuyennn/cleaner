@@ -48,7 +48,7 @@ class DataSourceScanFile @Inject constructor(
                 val id = cursor.getLong(idColumn)
                 val name = cursor.getString(nameColumn)
                 val duration = cursor.getInt(durationColumn)
-                val size = cursor.getInt(sizeColumn)
+                val size = cursor.getLong(sizeColumn)
 
                 val mediaFile = MediaFile(
                     id = id,
@@ -97,7 +97,7 @@ class DataSourceScanFile @Inject constructor(
             while (cursor.moveToNext()) {
                 val id = cursor.getLong(idColumn)
                 val name = cursor.getString(nameColumn)
-                val size = cursor.getInt(sizeColumn)
+                val size = cursor.getLong(sizeColumn)
 
                 val mediaFile = MediaFile(
                     id = id,

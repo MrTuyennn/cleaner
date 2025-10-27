@@ -10,3 +10,9 @@ class GetAppUsageUseCase @Inject constructor(
 ) {
     suspend operator fun  invoke(): Either<Throwable, List<AppUsageInfo>> = appUsageRepository.getAppUsage()
 }
+
+class UnInstallAppUseCase @Inject constructor(
+    private val appUsageRepository: AppUsageRepository
+) {
+    suspend operator fun  invoke(appUsage: AppUsageInfo): Either<Throwable, Boolean> = appUsageRepository.unInstallApp(appUsage)
+}

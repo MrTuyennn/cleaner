@@ -162,7 +162,7 @@ fun ImageItem(image: MediaFile,onClick: () -> Unit) {
                     style = MaterialTheme.typography.titleMedium
                 )
                 Text(
-                    text = "Size: ${image.size} bytes",
+                    text = "Size: ${image.readableSize}",
                     style = MaterialTheme.typography.bodySmall
                 )
             }
@@ -194,7 +194,7 @@ fun VideoItem(video: MediaFile,onClick: () -> Unit) {
                     style = MaterialTheme.typography.titleMedium
                 )
                 Text(
-                    text = "Duration: ${video.duration}ms, Size: ${video.size} bytes",
+                    text = "Duration: ${video.duration}ms, Size: ${video.readableSize} bytes",
                     style = MaterialTheme.typography.bodySmall
                 )
             }
