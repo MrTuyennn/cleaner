@@ -16,4 +16,8 @@ interface ScanFileRepository {
     suspend fun getFolderSystem(): Either<Throwable, List<Folder>>
 
     val folderSystem : StateFlow<List<Folder>>
+
+    fun saveItemFolderSystem(folder: Folder)
+
+    val currentItemFolderSystem: StateFlow<Folder>
 }

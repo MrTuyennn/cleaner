@@ -122,7 +122,6 @@ class DataSourceScanFile @Inject constructor(
     }
 
     suspend fun deleteItem(mediaFile: MediaFile): Either<Throwable, Boolean> {
-        print("folderSet ==== 333333")
         return try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 val collection = if (mediaFile.type == MediaType.IMAGE) {
@@ -217,7 +216,6 @@ class DataSourceScanFile @Inject constructor(
             )
         }.sortedBy { it.name })
     }
-
 
     suspend fun getFoldersFromFileSystem(): Either<Throwable, List<Folder>> {
         return try {

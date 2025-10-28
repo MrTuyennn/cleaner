@@ -45,7 +45,7 @@ class GetAllFolderUseCase @Inject constructor(
     private val scanFileRepository: ScanFileRepository
 ) {
     suspend operator fun invoke(): Either<Throwable, List<Folder>> {
-      return scanFileRepository.getAllFolder()
+        return scanFileRepository.getAllFolder()
     }
 }
 
@@ -60,7 +60,23 @@ class GetFolderSystemUseCase @Inject constructor(
 class FolderSystemUseCase @Inject constructor(
     private val scanFileRepository: ScanFileRepository
 ) {
-     operator fun invoke(): StateFlow<List<Folder>> {
+    operator fun invoke(): StateFlow<List<Folder>> {
         return scanFileRepository.folderSystem
+    }
+}
+
+class SaveFolderSystemUseCase @Inject constructor(
+    private val scanFileRepository: ScanFileRepository
+) {
+    operator fun invoke(folder: Folder) {
+        scanFileRepository.saveItemFolderSystem(folder)
+    }
+}
+
+class CurrentFolderSystemUseCase @Inject constructor(
+    private val scanFileRepository: ScanFileRepository
+) {
+    operator fun invoke(): StateFlow<Folder> {
+        return scanFileRepository.currentItemFolderSystem
     }
 }
