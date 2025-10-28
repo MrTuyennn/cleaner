@@ -4,6 +4,7 @@ import arrow.core.Either
 import com.inetkr.cleaner.data.repository.scanFile.ScanFileRepository
 import com.inetkr.cleaner.domain.entity.Folder
 import com.inetkr.cleaner.domain.entity.MediaFile
+import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 
 class ScanFileVideoUseCase @Inject constructor(
@@ -53,5 +54,13 @@ class GetFolderSystemUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(): Either<Throwable, List<Folder>> {
         return scanFileRepository.getFolderSystem()
+    }
+}
+
+class FolderSystemUseCase @Inject constructor(
+    private val scanFileRepository: ScanFileRepository
+) {
+     operator fun invoke(): StateFlow<List<Folder>> {
+        return scanFileRepository.folderSystem
     }
 }

@@ -12,3 +12,5 @@ import kotlinx.serialization.Serializable
 @Serializable object MemoryRoute
 
 @Serializable object StorageRoute
+
+@Serializable object StorageDetailRoute

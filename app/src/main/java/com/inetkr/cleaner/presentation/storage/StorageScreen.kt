@@ -28,7 +28,8 @@ fun StorageScreen(
     nav: NavController,
     viewModel: StorageViewModel = hiltViewModel()
 ) {
-    val lsFolder by viewModel.folderSystem.collectAsState()
+    val lsFolder = viewModel.folderSystem.collectAsState().value
+
 
     Box(modifier = Modifier.statusBarsPadding()) {
         LazyColumn {

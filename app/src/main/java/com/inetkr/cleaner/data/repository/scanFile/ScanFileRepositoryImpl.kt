@@ -6,13 +6,21 @@ import com.inetkr.cleaner.di.qualifiers.DefaultDispatcher
 import com.inetkr.cleaner.domain.entity.Folder
 import com.inetkr.cleaner.domain.entity.MediaFile
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class ScanFileRepositoryImpl @Inject constructor(
     @DefaultDispatcher private val coroutineDispatcher: CoroutineDispatcher,
-    private val dataSourceScanFile: DataSourceScanFile
+    private val dataSourceScanFile: DataSourceScanFile,
 ): ScanFileRepository {
+
+    val _folderSystem = MutableStateFlow<List<Folder>>(emptyList())
+
+    override val folderSystem: StateFlow<List<Folder>> = _folderSystem.asStateFlow()
+
     override suspend fun scanVideoFile(): List<MediaFile> = withContext(coroutineDispatcher) {
         val allVideo =  dataSourceScanFile.scanAllVideos()
         return@withContext allVideo
@@ -32,7 +40,17 @@ class ScanFileRepositoryImpl @Inject constructor(
 
     override suspend fun getFolderSystem(): Either<Throwable, List<Folder>> {
         return withContext(coroutineDispatcher) {
-            return@withContext dataSourceScanFile.getFoldersFromFileSystem()
+            val resultFolderSystem = dataSourceScanFile.getFoldersFromFileSystem()
+            resultFolderSystem.fold(
+                ifLeft = { error ->
+                    Either.Left(error)
+                },
+                ifRight = { result ->
+                    _folderSystem.value = result
+                    Either.Right(result)
+                }
+            )
         }
     }
+
 }

@@ -3,6 +3,7 @@ package com.inetkr.cleaner.data.repository.scanFile
 import arrow.core.Either
 import com.inetkr.cleaner.domain.entity.Folder
 import com.inetkr.cleaner.domain.entity.MediaFile
+import kotlinx.coroutines.flow.StateFlow
 
 interface ScanFileRepository {
     suspend fun scanVideoFile(): List<MediaFile>
@@ -13,4 +14,6 @@ interface ScanFileRepository {
     suspend fun getAllFolder(): Either<Throwable, List<Folder>>
 
     suspend fun getFolderSystem(): Either<Throwable, List<Folder>>
+
+    val folderSystem : StateFlow<List<Folder>>
 }
