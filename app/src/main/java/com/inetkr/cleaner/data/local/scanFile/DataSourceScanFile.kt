@@ -13,6 +13,7 @@ import com.inetkr.cleaner.domain.entity.Folder
 import com.inetkr.cleaner.domain.entity.MediaFile
 import com.inetkr.cleaner.domain.entity.MediaType
 import dagger.hilt.android.qualifiers.ApplicationContext
+import java.io.File
 import javax.inject.Inject
 
 @SuppressLint("Recycle")
@@ -211,7 +212,8 @@ class DataSourceScanFile @Inject constructor(
                 name = folderName,
                 path = "bucket_$folderName",
                 totalSize = 0,
-                sTime = 3948239483
+                sTime = 3948239483,
+                lsFile = emptyList()
             )
         }.sortedBy { it.name })
     }
@@ -231,7 +233,8 @@ class DataSourceScanFile @Inject constructor(
                         name = file.name,
                         path = file.path,
                         totalSize = directCount,
-                        sTime = sTime
+                        sTime = sTime,
+                        lsFile = file?.listFiles()?.toList() ?: emptyList(),
                     )
                 }
                 ?: emptyList()

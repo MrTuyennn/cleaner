@@ -55,6 +55,9 @@ fun StorageScreen(
                         Text("------")
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(folder.date)
+                        Text("------")
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(folder.lsFile.size.toString())
                     }
                 }
             }
