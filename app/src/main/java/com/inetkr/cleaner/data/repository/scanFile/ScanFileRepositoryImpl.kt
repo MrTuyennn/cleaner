@@ -29,4 +29,10 @@ class ScanFileRepositoryImpl @Inject constructor(
     override suspend fun getAllFolder(): Either<Throwable, List<Folder>> = withContext(coroutineDispatcher) {
         return@withContext dataSourceScanFile.getAllFolders()
     }
+
+    override suspend fun getFolderSystem(): Either<Throwable, List<Folder>> {
+        return withContext(coroutineDispatcher) {
+            return@withContext dataSourceScanFile.getFoldersFromFileSystem()
+        }
+    }
 }

@@ -2,9 +2,12 @@ package com.inetkr.cleaner.data.local.scanFile
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Build
+import android.os.Environment
 import android.provider.MediaStore
+import android.system.Os
 import arrow.core.Either
 import com.inetkr.cleaner.domain.entity.Folder
 import com.inetkr.cleaner.domain.entity.MediaFile
@@ -78,7 +81,8 @@ class DataSourceScanFile @Inject constructor(
         val projection = arrayOf(
             MediaStore.Images.Media._ID,
             MediaStore.Images.Media.DISPLAY_NAME,
-            MediaStore.Images.Media.SIZE
+            MediaStore.Images.Media.SIZE,
+            MediaStore.Images.Media.DATE_ADDED
         )
 
         val query = context.contentResolver.query(
@@ -86,7 +90,7 @@ class DataSourceScanFile @Inject constructor(
             projection,
             null,
             null,
-            "${MediaStore.Images.Media.DISPLAY_NAME} ASC"
+            "${MediaStore.Images.Media.DATE_ADDED} ASC"
         )
 
         query?.use { cursor ->
@@ -110,7 +114,7 @@ class DataSourceScanFile @Inject constructor(
                 )
 
                 mediaList.add(mediaFile)
-            //    println("Image: $name, Size: $size bytes, thumbnailUri: ${mediaFile.thumbnailUri}")
+                //    println("Image: $name, Size: $size bytes, thumbnailUri: ${mediaFile.thumbnailUri}")
             }
         }
         return mediaList
@@ -146,15 +150,15 @@ class DataSourceScanFile @Inject constructor(
     }
 
     suspend fun getAllFolders(): Either<Throwable, List<Folder>> {
+
         val folderSet = mutableSetOf<String>()
 
-        // Lấy thư mục từ images
         val imageCollection = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-        
+
         val imageProjection = arrayOf(
             MediaStore.Images.Media.BUCKET_DISPLAY_NAME
         )
-        
+
         val imageQuery = context.contentResolver.query(
             imageCollection,
             imageProjection,
@@ -162,10 +166,11 @@ class DataSourceScanFile @Inject constructor(
             null,
             MediaStore.Images.Media.BUCKET_DISPLAY_NAME
         )
-        
+
         imageQuery?.use { cursor ->
-            val bucketNameColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME)
-            
+            val bucketNameColumn =
+                cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME)
+
             while (cursor.moveToNext()) {
                 val folderName = cursor.getString(bucketNameColumn)
                 if (!folderName.isNullOrEmpty()) {
@@ -173,14 +178,14 @@ class DataSourceScanFile @Inject constructor(
                 }
             }
         }
-        
+
         // Lấy thư mục từ videos
         val videoCollection = MediaStore.Video.Media.EXTERNAL_CONTENT_URI
-        
+
         val videoProjection = arrayOf(
             MediaStore.Video.Media.BUCKET_DISPLAY_NAME
         )
-        
+
         val videoQuery = context.contentResolver.query(
             videoCollection,
             videoProjection,
@@ -188,10 +193,11 @@ class DataSourceScanFile @Inject constructor(
             null,
             MediaStore.Video.Media.BUCKET_DISPLAY_NAME
         )
-        
+
         videoQuery?.use { cursor ->
-            val bucketNameColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.BUCKET_DISPLAY_NAME)
-            
+            val bucketNameColumn =
+                cursor.getColumnIndexOrThrow(MediaStore.Video.Media.BUCKET_DISPLAY_NAME)
+
             while (cursor.moveToNext()) {
                 val folderName = cursor.getString(bucketNameColumn)
                 if (!folderName.isNullOrEmpty()) {
@@ -200,13 +206,39 @@ class DataSourceScanFile @Inject constructor(
             }
         }
 
-        println("folderSet ==== $folderSet")
-
         return Either.Right(folderSet.map { folderName ->
             Folder(
                 name = folderName,
-                path = "bucket_$folderName"
+                path = "bucket_$folderName",
+                totalSize = 0,
+                sTime = 3948239483
             )
         }.sortedBy { it.name })
+    }
+
+
+    suspend fun getFoldersFromFileSystem(): Either<Throwable, List<Folder>> {
+        return try {
+            val root = Environment.getExternalStorageDirectory()
+
+            val folderList = root.listFiles()
+                ?.filter { it.isDirectory }
+                ?.map { file ->
+                    val directCount = file.listFiles()?.size ?: 0
+                    val sTime = (Os.stat(file.absolutePath).st_ctime * 1000L)
+
+                    Folder(
+                        name = file.name,
+                        path = file.path,
+                        totalSize = directCount,
+                        sTime = sTime
+                    )
+                }
+                ?: emptyList()
+
+            Either.Right(folderList.sortedBy { it.name })
+        } catch (e: Exception) {
+            Either.Left(e)
+        }
     }
 }

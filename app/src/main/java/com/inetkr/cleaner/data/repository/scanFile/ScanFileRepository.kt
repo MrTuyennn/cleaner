@@ -11,4 +11,6 @@ interface ScanFileRepository {
     suspend fun deleteFileItem(mediaFile: MediaFile): Either<Throwable, Boolean>
 
     suspend fun getAllFolder(): Either<Throwable, List<Folder>>
+
+    suspend fun getFolderSystem(): Either<Throwable, List<Folder>>
 }

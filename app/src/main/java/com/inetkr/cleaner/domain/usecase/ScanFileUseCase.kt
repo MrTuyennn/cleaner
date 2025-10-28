@@ -47,3 +47,11 @@ class GetAllFolderUseCase @Inject constructor(
       return scanFileRepository.getAllFolder()
     }
 }
+
+class GetFolderSystemUseCase @Inject constructor(
+    private val scanFileRepository: ScanFileRepository
+) {
+    suspend operator fun invoke(): Either<Throwable, List<Folder>> {
+        return scanFileRepository.getFolderSystem()
+    }
+}

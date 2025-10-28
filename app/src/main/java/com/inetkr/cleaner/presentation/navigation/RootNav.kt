@@ -13,9 +13,11 @@ import com.inetkr.cleaner.presentation.appusage.AppUsageScreen
 import com.inetkr.cleaner.presentation.home.HomeScreen
 import com.inetkr.cleaner.presentation.memory.MemoryManagerScreen
 import com.inetkr.cleaner.presentation.scanfile.ScanFileScreen
+import com.inetkr.cleaner.presentation.storage.StorageScreen
 import com.inetkr.cleaner.utils.router.AppUsageRoute
 import com.inetkr.cleaner.utils.router.MemoryRoute
 import com.inetkr.cleaner.utils.router.ScanFileRoute
+import com.inetkr.cleaner.utils.router.StorageRoute
 
 
 @Composable
@@ -45,6 +47,9 @@ fun RootNav() {
         }
         composable<MemoryRoute> {
             MemoryManagerScreen(nav)
+        }
+        composable<StorageRoute> {
+            StorageScreen(nav)
         }
     }
 }
