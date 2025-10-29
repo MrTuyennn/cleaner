@@ -8,6 +8,8 @@ import com.inetkr.cleaner.data.repository.memorymanager.MemoryManagerRepository
 import com.inetkr.cleaner.data.repository.memorymanager.MemoryManagerRepositoryImpl
 import com.inetkr.cleaner.data.repository.scanFile.ScanFileRepository
 import com.inetkr.cleaner.data.repository.scanFile.ScanFileRepositoryImpl
+import com.inetkr.cleaner.data.repository.scanner.ScannerRepository
+import com.inetkr.cleaner.data.repository.scanner.ScannerRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -32,4 +34,8 @@ abstract  class RepositoryModule {
    @Binds
    @Singleton
    abstract fun bindMemoryManagerRepository(impl: MemoryManagerRepositoryImpl): MemoryManagerRepository
+
+   @Binds
+   @Singleton
+   abstract fun bindScannerRepository(impl: ScannerRepositoryImpl): ScannerRepository
 }

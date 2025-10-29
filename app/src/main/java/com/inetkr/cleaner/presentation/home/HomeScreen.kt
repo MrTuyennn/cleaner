@@ -28,6 +28,7 @@ import com.inetkr.cleaner.utils.perm.RequestMediaPermission
 import com.inetkr.cleaner.utils.router.AppUsageRoute
 import com.inetkr.cleaner.utils.router.MemoryRoute
 import com.inetkr.cleaner.utils.router.ScanFileRoute
+import com.inetkr.cleaner.utils.router.ScannerRoute
 
 @Composable
 fun HomeScreen(
@@ -101,6 +102,14 @@ fun HomeScreen(
                 }
             ) {
                 Text("Go to App Memory")
+            }
+
+            Button(
+                onClick = {
+                    nav.navigate(ScannerRoute)
+                }
+            ) {
+                Text("Go to Scanner")
             }
         }
     }
