@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.inetkr.cleaner.presentation.basepullrefresh.PullToRefreshContainer
 import com.inetkr.cleaner.utils.router.StorageDetailRoute
 
 @Composable
@@ -31,8 +32,7 @@ fun StorageScreen(
 ) {
     val lsFolder = viewModel.folderSystem.collectAsState().value
 
-
-    Box(modifier = Modifier.statusBarsPadding()) {
+    PullToRefreshContainer {
         LazyColumn {
             items(lsFolder) { folder ->
                 Card(
@@ -43,7 +43,6 @@ fun StorageScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(10.dp)
-                        .align(Alignment.Center)
                 ) {
                     Row(
                         modifier = Modifier

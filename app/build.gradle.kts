@@ -118,6 +118,7 @@ dependencies {
     // ================== Hilt ==================
     implementation(libs.hilt.android)
     implementation(libs.androidx.preference.ktx)
+    implementation(libs.androidx.material3)
     kapt(libs.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
 
